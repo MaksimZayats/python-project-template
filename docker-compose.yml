@@ -1,0 +1,82 @@
+version: '3.9'
+
+x-database-variables: &database-variables
+  POSTGRES_DB: dev
+  POSTGRES_USER: dev
+  POSTGRES_PASSWORD: dev
+
+
+x-app-variables: &app-variables
+  <<: *database-variables
+  POSTGRES_HOST: db  # container name
+
+
+services:
+  web:
+    build: .
+    command: uvicorn application.app:app --host 0.0.0.0 --port 80
+    expose:
+      - "80"
+    depends_on:
+      - db
+    environment: *app-variables
+    restart: always
+    volumes:
+      - .:/application
+    networks:
+      - backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.entrypoints=http
+      - traefik.http.routers.backend.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.backend-https.entrypoints=https
+      - traefik.http.routers.backend-https.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.backend-https.tls=true
+      - traefik.http.routers.backend-https.tls.certresolver=le
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+      - traefik.http.routers.app-http.middlewares=https-redirect
+      - traefik.docker.network=backend
+
+  db:
+    image: postgres:latest
+    environment: *database-variables
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  reverse-proxy:
+    image: traefik:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-public-certificates:/certificates
+    networks:
+      - backend
+    labels:
+      - traefik.docker.network=backend
+    command:
+      - --providers.docker=true
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --providers.docker.exposedbydefault=false
+      - --certificatesresolvers.le.acme.tlschallenge=true
+      - --certificatesresolvers.le.acme.email=${LE_EMAIL}
+      - --certificatesresolvers.le.acme.storage=/certificates/acme.json
+      - --log
+
+networks:
+  backend:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.10.0/24
+
+volumes:
+  postgres-data:
+  traefik-public-certificates:
