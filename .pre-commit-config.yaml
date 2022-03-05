@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.1.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -17,10 +17,10 @@ repos:
       - id: isort
         name: isort (python)
 
-  - repo: https://github.com/odwyersoftware/brunette
-    rev: fb59e4d2bd1386c631deafb5fc9e66112ef25870
+  - repo: https://github.com/psf/black
+    rev: 22.1.0
     hooks:
-      - id: brunette
+      - id: black
 
   - repo: local
     hooks:
