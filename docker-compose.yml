@@ -14,7 +14,7 @@ x-app-variables: &app-variables
 services:
   web:
     build: .
-    command: uvicorn application.app:app --host 0.0.0.0 --port 80
+    command: python run_server.py
     expose:
       - "80"
     depends_on:

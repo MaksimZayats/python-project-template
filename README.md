@@ -6,7 +6,7 @@
 * Code checks
   * `flake8`
   * `isort`
-  * `brunette (black)`
+  * `black`
   * `mypy`
 * [Docker](docker-compose.yml)
   * Database (`PostgreSQL`)
@@ -27,4 +27,4 @@
       POSTGRES_PASSWORD=dev
       POSTGRES_HOST=127.0.0.1
       ```
-  * `python -m uvicorn application.app:app`
+  * `python run_server.py`
