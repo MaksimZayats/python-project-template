@@ -144,5 +144,3 @@ cython_debug/
 *.db
 *.db-shm
 *.db-wal
-
-neuron
