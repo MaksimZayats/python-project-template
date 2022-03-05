@@ -17,14 +17,8 @@
 ## Usage
 
 * Docker
-  * Configure `environment variables` or `.env` file as [`.env.dist`](.env.dist)
+  * Configure `environment variables` or `.env` file as [`.env.docker-example`](.env.docker-example)
   * `docker-compose up --build --force-recreate`
 * Default run
-  * Configure `environment variables` or `.env` file
-    * ```dotenv
-      POSTGRES_DB=dev
-      POSTGRES_USER=dev
-      POSTGRES_PASSWORD=dev
-      POSTGRES_HOST=127.0.0.1
-      ```
+  * Configure `environment variables` or `.env` file as [`.env.no-docker-example`](.env.no-docker-example)
   * `python run_server.py`

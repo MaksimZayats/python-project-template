@@ -8,6 +8,7 @@ x-database-variables: &database-variables
 
 x-app-variables: &app-variables
   <<: *database-variables
+  FROM_DOCKER: "true"
   POSTGRES_HOST: db  # container name
 
 
