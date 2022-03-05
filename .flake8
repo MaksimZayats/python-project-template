@@ -1,0 +1,3 @@
+per-file-ignores =
+    # imported but unused
+    __init__.py: F401
